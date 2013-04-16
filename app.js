@@ -115,5 +115,5 @@ events.sort(function(a, b){
 
 for(var index in events){
 	var command = argv.showcommands == 1 ? ' | ' + events[index].task : '';
-	console.log(dateFormat(events[index].time, "ddd h:MM TT") + ': ' + events[index].comment + command);
+	console.log(dateFormat(events[index].time, "ddd, mmm d, h:MM TT") + ': ' + events[index].comment + command);
 }
