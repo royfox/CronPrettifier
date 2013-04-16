@@ -1,6 +1,7 @@
 var 
 	parser = require('cron-parser'),
-	fs  = require("fs"),    
+	fs  = require("fs"),   
+	dateFormat = require('./dateformat') 
 	argv = require('optimist')
         .demand('f')
         .alias('f', 'file')
@@ -98,5 +99,5 @@ events.sort(function(a, b){
 });
 
 for(var index in events){
-	console.log(events[index].time.toLocaleString() + ': ' + events[index].comment + ' | (' + events[index].task + ')');
+	console.log(dateFormat(events[index].time, "ddd h:MM TT") + ': ' + events[index].comment + ' | (' + events[index].task + ')');
 }

@@ -5,6 +5,7 @@ Dependencies:
 
 - [https://github.com/harrisiirak/node-cron-parser](https://github.com/harrisiirak/node-cron-parser)
 - [https://github.com/substack/node-optimist](https://github.com/substack/node-optimist)
+- [https://github.com/felixge/node-dateformat](https://github.com/felixge/node-dateformat)
 
 Setup:
 
