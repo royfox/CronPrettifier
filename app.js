@@ -3,14 +3,18 @@ var
 	fs  = require("fs"),   
 	dateFormat = require('./dateformat') 
 	argv = require('optimist')
-        .demand('f')
         .alias('f', 'file')
 		.describe('f', 'Load a file')
+		.alias('c', 'content')
+		.describe('c', 'Crontab file as a string')
+		.default('c', null)
         .default('threshold', 10)
         .alias('t', 'threshold')
 		.describe('threshold', 'Tasks that appear more often than the threshold will be excluded')
 		.default('days', 1)
 		.describe('days','Number of days to display')
+		.default('showcommands', 0)
+		.describe('showcommands', 'Will display full commands if 1, otherwise comments only')
         .argv;
 
 var 
@@ -25,12 +29,23 @@ var options = {
   endDate: endDate
 };
 
+
+if(argv.content){
+	argv.content.split("\n").forEach(function (line) {
+		parseLine(line);
+	});
+} else {
+	fs.readFileSync(argv.file).toString().split('\n').forEach(function (line) {
+		parseLine(line);
+	});
+}
+
 /**
-  * Run through each of the file, and if it looks like a CRON task, try and parse it
+  * Run through each line, and if it looks like a CRON task, try and parse it
   * If it looks like a comment, save it and attach it to the next cron task
   * Ignore lines that are just whitespace
   */
-fs.readFileSync(argv.file).toString().split('\n').forEach(function (line) { 
+function parseLine (line){ 
     if(line.indexOf("#") !== -1){
 		//comment
     	lastComment = line.replace("#", "");
@@ -52,7 +67,7 @@ fs.readFileSync(argv.file).toString().split('\n').forEach(function (line) {
 		parse(cronPieces.join(" "), expressionPieces.join(" "), lastComment);
 		lastComment = null;
     }
-});
+};
 
 
 /**
@@ -99,5 +114,6 @@ events.sort(function(a, b){
 });
 
 for(var index in events){
-	console.log(dateFormat(events[index].time, "ddd h:MM TT") + ': ' + events[index].comment + ' | (' + events[index].task + ')');
+	var command = argv.showcommands == 1 ? ' | ' + events[index].task : '';
+	console.log(dateFormat(events[index].time, "ddd h:MM TT") + ': ' + events[index].comment + command);
 }
