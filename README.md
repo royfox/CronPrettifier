@@ -15,3 +15,5 @@ Setup:
 Example usage:
 
 	node app.js -f cronfile 
+	
+You can also just run the bash script, which will pass the contents of `crontab -l` to the script.
